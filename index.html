@@ -1,2 +1,101 @@
-<h1>profile</h1>
-<h2> life</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save the Date - [Couples Names]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            font-size: 36px;
+        }
+        p {
+            color: #666;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .save-button {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .save-button:hover {
+            background-color: #ff8787;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>[Couple's Names]</h1>
+        <p>We’re getting married!<br>
+        Date: June 15, 2025<br>
+        Location: [Venue Name], [City]</p>
+        <button class="save-button" onclick="addToCalendar()">Save the Date</button>
+    </div>
+
+    <script>
+        function addToCalendar() {
+            // Event details
+            const event = {
+                title: "[Couple's Names] Wedding",
+                start: new Date("2025-06-15T14:00:00"), // Wedding start time (2:00 PM)
+                end: new Date("2025-06-15T22:00:00"),   // Wedding end time (10:00 PM)
+                location: "[Venue Name], [City]",
+                description: "Join us for our special day!"
+            };
+
+            // Generate iCalendar data
+            const calData = [
+                "BEGIN:VCALENDAR",
+                "VERSION:2.0",
+                "BEGIN:VEVENT",
+                `DTSTART:${formatDate(event.start)}`,
+                `DTEND:${formatDate(event.end)}`,
+                `SUMMARY:${event.title}`,
+                `DESCRIPTION:${event.description}`,
+                `LOCATION:${event.location}`,
+                "END:VEVENT",
+                "END:VCALENDAR"
+            ].join("\r\n");
+
+            // Create and download the .ics file
+            const blob = new Blob([calData], { type: "text/calendar" });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "save-the-date.ics";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            alert("Calendar event file has been generated! Open the downloaded file to add it to your calendar.");
+        }
+
+        function formatDate(date) {
+            return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+        }
+    </script>
+</body>
+</html>
